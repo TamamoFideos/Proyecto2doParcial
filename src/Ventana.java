@@ -48,7 +48,7 @@ public class Ventana extends JFrame {
 
     public Ventana(){
         setTitle("Merge sort");
-        setSize(1200,900);
+        setSize(1200,820);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         createComponents();
@@ -195,7 +195,7 @@ public class Ventana extends JFrame {
         forkJoinButton.setFont(new Font("Skia", Font.PLAIN, 20));
         executorButton = new JButton("Executor Join");
         executorButton.setFont(new Font("Skia", Font.PLAIN, 20));
-        fileChooser.setCurrentDirectory(new java.io.File("C:\\Users\\Adrian Llanos\\Desktop\\Escuela\\Archivos-proyecto-paralela"));
+        fileChooser.setCurrentDirectory(new java.io.File("C:\\Users\\puto-\\Desktop\\Escuela\\Archivos-proyecto-paralela"));
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
         fileChoserDestiny.setCurrentDirectory(new File("."));
@@ -231,7 +231,7 @@ public class Ventana extends JFrame {
             File[] filesToCompare = listOfFiles.clone();
             zipOut.putNextEntry(zipEntry);
             byte[] bytes = new byte[1024];
-            for (int i = 0; i < bytes.length/200; i++) {
+            for (int i = 0; i < bytes.length/300; i++) {
                 FileOutputStream fos2 = new FileOutputStream(srcFile);
                 ZipOutputStream zipOutputStream = new ZipOutputStream(fos2);
                 zipOutputStream.flush();
@@ -253,7 +253,7 @@ public class Ventana extends JFrame {
                 zipOut.putNextEntry(zipEntry);
 
                 byte[] buffer = new byte[1024];
-                for (int i = 0; i < buffer.length/500; i++) {
+                for (int i = 0; i < buffer.length/1000; i++) {
                     FileOutputStream fos2 = new FileOutputStream(file);
                     ZipOutputStream zipOutputStream = new ZipOutputStream(fos2);
                     zipOutputStream.flush();
