@@ -31,6 +31,8 @@ public class Ventana extends JFrame {
     private JTextArea originalArrayTextArea;
     private JTextArea sorterdArrayTextArea;
     private JLabel sortedArrayLabel;
+    final JFileChooser fileChooser = new JFileChooser();
+    final JFileChooser fileChoserDestiny = new JFileChooser();
 
     private JButton mergeSortButton;
     private JButton forkJoinButton;
@@ -46,7 +48,7 @@ public class Ventana extends JFrame {
 
     public Ventana(){
         setTitle("Merge sort");
-        setSize(1200,700);
+        setSize(1200,900);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         createComponents();
@@ -59,7 +61,7 @@ public class Ventana extends JFrame {
                 Ventana.timerThread.startCountingTime();
             }
             try {
-                File folder = new File("C:\\Users\\Adrian Llanos\\Desktop\\Escuela\\Archivos-proyecto-paralela\\10,000");
+                File folder =fileChooser.getSelectedFile();
                 File[] listOfFiles = folder.listFiles();
                 final FileOutputStream fos = new FileOutputStream("secuencial-compressed.zip");
                 ZipOutputStream zipOut = new ZipOutputStream(fos);
@@ -71,13 +73,14 @@ public class Ventana extends JFrame {
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
+            fileChoserDestiny.setCurrentDirectory(new File("."));
         });
 
         forkJoinButton.addActionListener(e -> {
             if (!Ventana.timerThread.contando){
                 Ventana.timerThread.startCountingTime();
             }
-            File folder = new File("C:\\Users\\Adrian Llanos\\Desktop\\Escuela\\Archivos-proyecto-paralela\\10,000");
+            File folder =fileChooser.getSelectedFile();
             File[] listOfFiles = folder.listFiles();
             File outputZipFile = new File("fork-join-compressed.zip");
             FileOutputStream fos;
@@ -102,16 +105,19 @@ public class Ventana extends JFrame {
 
             timerThread.endCount();
             forkJoinTimeLabel.setText(timerThread.getTime() + " mS");
+            fileChoserDestiny.setCurrentDirectory(new File("."));
         });
         executorButton.addActionListener(e -> {
             if (!Ventana.timerThread.contando){
                 Ventana.timerThread.startCountingTime();
             }
-            File folder = new File("C:\\Users\\Adrian Llanos\\Desktop\\Escuela\\Archivos-proyecto-paralela\\10,000");
+            File folder =fileChooser.getSelectedFile();
             File[] listOfFiles = folder.listFiles();
             ExecutorServiceMerge.ExecutorMerge(listOfFiles);
             timerThread.endCount();
             executorServiceLabel.setText(timerThread.getTime() + " mS");
+            fileChoserDestiny.setCurrentDirectory(new File("."));
+
         });
 
         createOriginalArrayButton.addActionListener(e -> {
@@ -146,13 +152,15 @@ public class Ventana extends JFrame {
         sorterdArrayTextArea.setText(arrStr);
     }
     public void createComponents(){
-        originalArrayLabel = new JLabel("Arreglo original");
+        originalArrayLabel = new JLabel("Carpeta de Origen");
         originalArrayLabel.setFont(new Font("Verdana", Font.BOLD, 20));
         originalArrayLabel.setSize(400,150);
         originalArrayLabel.setHorizontalAlignment(JLabel.CENTER);
         originalArrayLabel.setVerticalAlignment(JLabel.CENTER);
-        sortedArrayLabel = new JLabel("Arreglo ordenado");
+        sortedArrayLabel = new JLabel("Carpeta destino");
         sortedArrayLabel.setFont(new Font("Verdana", Font.BOLD, 20));
+
+
 
         mergeSortTimeLabel = new JLabel("0.0 mS");
         mergeSortTimeLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -181,23 +189,25 @@ public class Ventana extends JFrame {
 
         sorterdArrayTextArea.setLineWrap(true);
 
-        mergeSortButton = new JButton("Merge Sort");
+        mergeSortButton = new JButton("Compresion Secuencial");
         mergeSortButton.setFont(new Font("Skia", Font.PLAIN, 20));
         forkJoinButton = new JButton("Fork Join");
         forkJoinButton.setFont(new Font("Skia", Font.PLAIN, 20));
         executorButton = new JButton("Executor Join");
         executorButton.setFont(new Font("Skia", Font.PLAIN, 20));
+        fileChooser.setCurrentDirectory(new java.io.File("C:\\Users\\Adrian Llanos\\Desktop\\Escuela\\Archivos-proyecto-paralela"));
+        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
-
+        fileChoserDestiny.setCurrentDirectory(new File("."));
         JPanel arrayUnsortedPanel = new JPanel();
         arrayUnsortedPanel.setLayout(new BorderLayout());
         arrayUnsortedPanel.add(originalArrayLabel, BorderLayout.NORTH);
-        arrayUnsortedPanel.add(originalArrayTextArea, BorderLayout.CENTER);
+        arrayUnsortedPanel.add(fileChooser, BorderLayout.CENTER);
 
         JPanel arraySortedPanel = new JPanel();
         arraySortedPanel.setLayout(new BorderLayout());
         arraySortedPanel.add(sortedArrayLabel, BorderLayout.NORTH);
-        arraySortedPanel.add(sorterdArrayTextArea, BorderLayout.CENTER);
+        arraySortedPanel.add(fileChoserDestiny, BorderLayout.CENTER);
 
         JPanel buttonsPannel = new JPanel();
         buttonsPannel.setLayout(new GridLayout(2,3));
@@ -212,13 +222,7 @@ public class Ventana extends JFrame {
         leftPanel.add(arrayUnsortedPanel, BorderLayout.NORTH);
         leftPanel.add(arraySortedPanel, BorderLayout.CENTER);
         leftPanel.add(buttonsPannel, BorderLayout.SOUTH);
-
-        rightPanel = new JPanel();
-        rightPanel.setLayout(new BorderLayout());
-        rightPanel.add(createOriginalArrayButton, BorderLayout.NORTH);
-        rightPanel.add(deleteOriginalArrayButton, BorderLayout.SOUTH);
-        add(leftPanel, BorderLayout.WEST);
-        add(rightPanel, BorderLayout.EAST);
+        add(leftPanel, BorderLayout.CENTER);
     }
     public static void compressSecuencial(File[] listOfFiles, FileOutputStream fos, ZipOutputStream zipOut) throws IOException {
         for (File srcFile : listOfFiles) {
